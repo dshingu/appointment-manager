@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const environment = require('../../../bootstrap/environment');
 
 module.exports = class JWT {
 
@@ -9,7 +8,7 @@ module.exports = class JWT {
     }
 
     static VerifyAccessToken (token, payload) {
-        return jwt.verify(token, process.ennv.JWT_ACCESS_TOKEN)
+        return jwt.verify(token, process.env.JWT_ACCESS_TOKEN)
     }
 
 };

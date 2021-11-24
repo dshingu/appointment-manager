@@ -50,7 +50,7 @@ class Database {
         }
     }
 
-    async getConnection () {
+    getConnection () {
         return this.connection;
     }
 
