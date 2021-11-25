@@ -2,6 +2,7 @@ const JWTUtils = require('../utils/jwt');
 
 module.exports = function () {
     return function (request, response, next) {
+
         const authHeader = request.headers.authorization;
         let bearer, token;
         
@@ -21,5 +22,6 @@ module.exports = function () {
             return response.status(401).json(global.error('Invalid token', {}));
         }
         next();
+        
     }
 };

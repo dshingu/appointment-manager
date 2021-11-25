@@ -3,16 +3,16 @@ const User = require('./User');
 const sequelize = global.sequelize;
 
 
-class PersonalInformation extends Model 
+class Appointment extends Model 
 {
 
     associate (models) {
-        PersonalInformation.belongsTo(User, {foreignKey: 'uid'});
+        Appointment.belongsTo(User, {foreignKey: 'uid'});
     }
 
 }
 
-PersonalInformation.init({
+Appointment.init({
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -27,24 +27,27 @@ PersonalInformation.init({
             }
         }
     },
-    first_name: {
-        type: Sequelize.STRING,
+    title: {
+        type: Sequelize.STRING(60),
         allowNull: false
     },
-    last_name: {
+    description: {
         type: Sequelize.STRING,
+        allowNull: true
+    },
+    date: {
+        type: Sequelize.DATE,
         allowNull: false
     },
-    email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+    remind_me: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0
     }
 }, {
     sequelize,
-    modelName: 'PersonalInformation',
-    tableName: 'personal_informations',
+    modelName: 'Appointment',
+    tableName: 'appointments',
     timestamps: false
 });
 
-module.exports = PersonalInformation;
+module.exports = Appointment;

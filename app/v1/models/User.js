@@ -3,6 +3,7 @@ const sequelize = global.sequelize;
 const bcrypt = require('bcrypt');
 const PersonalInformation = require('./PersonalInformation');
 const Token = require('./Token');
+const JWTUtils = require('../utils/jwt');
 
 
 class User extends Model 
@@ -22,25 +23,29 @@ class User extends Model
         first_name,
         last_name,
         email,
-        password,
-        token
+        password
     }) {
 
         return sequelize.transaction(async () => {
-            return User.create({
+            const user = await User.create({
                 username: username,
                 password: password,
                 PersonalInformation: {
                     first_name: first_name,
                     last_name: last_name,
                     email: email
-                },
-                Token: {
-                    token: token
                 }
             },  {
-                include: [PersonalInformation, Token]
+                include: [PersonalInformation]
             });
+            const payload = {uid: user.id};
+            const _token = JWTUtils.GenerateAccessToken(payload);
+            const token = await Token.create({
+                uid: user.id,
+                token: _token
+            });
+
+            return _token; 
         });
 
     }

@@ -6,6 +6,9 @@ const User = require('./User');
 class Token extends Model 
 {
 
+    associate (models) {
+        Token.belongsTo(User, {foreignKey: 'uid'});
+    }
 
 }
 
@@ -33,7 +36,5 @@ Token.init({
     tableName: 'tokens',
     timestamps: false
 });
-
-//Token.belongsTo(User, {foreignKey: 'uid'});
 
 module.exports = Token;

@@ -21,7 +21,7 @@ module.exports = {
         if (!user || !(await user.validatePassword(password))) {
             return response.status(401).json(global.error('Invalid credentials', {}));
         }
-        const payload = {username:username};
+        const payload = {uid:user.id};
         const token   = JWTUtils.GenerateAccessToken(payload);
         user.Token.token = token;
         await user.Token.save().catch((e) => console.log(e));
@@ -32,15 +32,12 @@ module.exports = {
 
     register: async (request, response, next) => {
         const {username, password, first_name, last_name, email } = request.body;
-        const payload = {username: username};
-        const token = JWTUtils.GenerateAccessToken(payload);
-        await User.addNewUser({
+        const token = await User.addNewUser({
             username: username,
             first_name: first_name,
             last_name: last_name,
             email: email,
-            password: password,
-            token: token
+            password: password
         }).catch((e) => console.log(e));
         response.status(200).json(global.ok('User register successfully!', {token: token}));
     },
