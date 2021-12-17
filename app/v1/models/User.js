@@ -38,7 +38,19 @@ class User extends Model
             },  {
                 include: [PersonalInformation]
             });
-            const payload = {uid: user.id};
+
+            const _user = {
+                id: user.id,
+                username: user.username,
+                PersonalInformation: {
+                    first_name: user.PersonalInformation.first_name,
+                    last_name: user.PersonalInformation.last_name,
+                    email: user.PersonalInformation.email
+                },
+                verified: user.verified
+            };
+
+            const payload = _user;
             const _token = JWTUtils.GenerateAccessToken(payload);
             const token = await Token.create({
                 uid: user.id,
@@ -91,6 +103,12 @@ User.init({
     modelName: 'User',
     timestamps: false
 });
+
+User.addScope('login', {
+    attributes: {
+        exclude: ['password']
+    }
+})
 
 User.prototype.validatePassword = async function (password) {
     return bcrypt.compare(password, this.password); 

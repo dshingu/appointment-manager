@@ -35,11 +35,11 @@ yup.addMethod(yup.string, 'uniqueUsername', function (errorMessage) {
 });
 
 const authSchema = yup.object({
-    username: yup.string().uniqueUsername('Username is already taken').required(),
-    first_name: yup.string().required(),
-    last_name: yup.string().required(),
-    email: yup.string().email('Should be a valid email, don\'t worry we won\'t spam you').uniqueEmail('Email is already associated with an account').required(),
-    password: yup.string().min(8).required()
+    username: yup.string().uniqueUsername('Username is already taken').required('Username is required'),
+    first_name: yup.string().required('Firstname is required'),
+    last_name: yup.string().required('Lastname is required'),
+    email: yup.string().email('Should be a valid email, don\'t worry we won\'t spam you').uniqueEmail('Email is already associated with an account').required('Email is required'),
+    password: yup.string().min(8).required('Password is required, for your safety')
 });
 
 module.exports = authSchema;

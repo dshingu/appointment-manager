@@ -1,11 +1,9 @@
 const {Router} = require('express');
-const {login, register, logout} = require('../controllers/AuthController');
+const {login, validateToken, register, logout} = require('../controllers/AuthController');
 const validate = require('../middlewares/validationMiddleware');
 const auth = require('../validators/authValidator');
 const needsAuth = require('../middlewares/authMiddleware');
- const router = Router();
-
-console.log(__dirname);
+const router = Router();
 
 router
     .route('/login')
@@ -18,5 +16,9 @@ router
 router
     .route('/logout')
     .post(needsAuth(), logout);
+
+router
+    .route('/validate-token')
+    .post(needsAuth(), validateToken);
 
 module.exports = router;

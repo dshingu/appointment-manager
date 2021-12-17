@@ -1,7 +1,7 @@
 const validationMiddleware = (schema) => async (request, response, next) => {
     try {
 
-        await schema.validate(request.body);
+        await schema.validate(request.body, {abortEarly: false});
         return next();
 
     } catch (error) {

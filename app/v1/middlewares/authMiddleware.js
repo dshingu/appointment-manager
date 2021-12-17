@@ -17,7 +17,10 @@ module.exports = function () {
  
         try {
             const jwt = JWTUtils.VerifyAccessToken(token);
-            request.body.jwt = jwt;
+            if (Date.now() >= (jwt.exp * 1000)) {
+                throw new Error('Invalid Token')
+            }
+            request.body.user = jwt;
         } catch (e) {
             return response.status(401).json(global.error('Invalid token', {}));
         }

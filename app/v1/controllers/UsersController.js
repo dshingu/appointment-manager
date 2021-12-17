@@ -8,8 +8,8 @@ const JWTUtils = require('../utils/jwt');
 module.exports = {
 
     index: async(request, response, next) =>  {
-        const {user} = request.body;
-        const appointments = await Appointment.findAll({where: {uid: user.id}}).catch((e) => console.log(e));
+        const {jwt} = request.body;
+        const appointments = await Appointment.findAll({where: {uid: jwt.uid}}).catch((e) => console.log(e));
         response.status(200).json(global.ok('', appointments));
     },
 
