@@ -3,6 +3,7 @@ const {Op} = require('sequelize');
 const PersonalInformation = require('../models/PersonalInformation');
 const Token = require('../models/Token');
 const JWTUtils = require('../utils/jwt');
+const AuthService = require('../services/AuthService');
 
 
 module.exports = {
@@ -10,36 +11,8 @@ module.exports = {
     login: async (request, response, next) => {
 
         const {username, password} = request.body;
-        const user = await User.findOne({ 
-            where: {
-                [Op.or]: {
-                    username: username,
-                    '$PersonalInformation.email$': username
-                }
-            },
-            include: [{model: PersonalInformation}, {model: Token}]
-        });
-
-        if (!user || !(await user.validatePassword(password))) {
-            return response.status(401).json(global.error('Invalid credentials', {}));
-        }
-        
-        const _user = {
-            id: user.id,
-            username: user.username,
-            PersonalInformation: {
-                first_name: user.PersonalInformation.first_name,
-                last_name: user.PersonalInformation.last_name,
-                email: user.PersonalInformation.email
-            },
-            verified: user.verified
-        };
-
-        const payload = _user;
-        const token   = JWTUtils.GenerateAccessToken(payload);
-        user.Token.token = token;
-        await user.Token.save().catch((e) => console.log(e));
-        return response.status(200).json(global.ok('Logged in successfully!', {token: token}));
+        const user = await AuthService.login(username, password);
+        return (user[0]) ? response.status(200).json(global.ok('', {token: user[1]})) : response.status(401).json(global.error('Invalid Credentials', user[1]));
         
         
     },

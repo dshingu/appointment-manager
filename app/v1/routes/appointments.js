@@ -12,11 +12,11 @@ router
 
     router
     .route('/:id')
-    .get(needsAuth(), index)
+    .get(needsAuth(), read)
     .delete(needsAuth(), remove);
 
 router
-    .route('/update:id')
+    .route('/update/:id')
     .put([needsAuth(),  validate(appointment)], update);
 
 
